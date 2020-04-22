@@ -36,9 +36,9 @@ public abstract class QuerydslService<E, I extends Comparable, ID extends Compar
 
     public enum LIKE {STARTS, STARTS_IGNORE_CASE, ENDS, ENDS_IGNORE_CASE, CONTAINS, CONTAINS_IGNORE_CASE}
 
-    @Value("${core.app.currentVersion:v2}")
+    @Value("${core.app.currentVersion:v1}")
     protected String currentVersion;
-    @Value("${core.app.compatibleVersion:v2,v1}")
+    @Value("${core.app.compatibleVersion:v1}")
     protected String[] compatibleVersion;
     @Autowired
     protected SQLQueryFactory sqlQueryFactory;
@@ -61,7 +61,7 @@ public abstract class QuerydslService<E, I extends Comparable, ID extends Compar
 
     @Autowired
     public void init(RequestMappingHandlerMapping requestMappingHandlerMapping, ApplicationContext applicationContext) throws NoSuchMethodException {
-        String entityName = this.getClass().getSimpleName();
+        String entityName = qEntity.getType().getSimpleName();
         // registerMapping 需要通过beanName注册 否则事务不生效
         String[] beanName = applicationContext.getBeanNamesForType(this.getClass());
         if (beanName.length != 1) {

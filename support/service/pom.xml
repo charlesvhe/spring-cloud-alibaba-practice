@@ -14,6 +14,11 @@
     <dependencies>
         <dependency>
             <groupId>com.github.charlesvhe</groupId>
+            <artifactId>spring-cloud-alibaba-practice-support-service-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.charlesvhe</groupId>
             <artifactId>spring-cloud-alibaba-practice-core</artifactId>
         </dependency>
         <dependency>

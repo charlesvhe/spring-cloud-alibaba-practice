@@ -12,6 +12,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +25,7 @@ import java.beans.PropertyDescriptor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -34,11 +37,13 @@ public abstract class QuerydslService<E, I extends Comparable, ID extends Compar
     public enum LIKE {STARTS, STARTS_IGNORE_CASE, ENDS, ENDS_IGNORE_CASE, CONTAINS, CONTAINS_IGNORE_CASE}
 
     @Value("${core.app.currentVersion:v2}")
-    private String currentVersion;
+    protected String currentVersion;
     @Value("${core.app.compatibleVersion:v2,v1}")
-    private String[] compatibleVersion;
+    protected String[] compatibleVersion;
     @Autowired
     protected SQLQueryFactory sqlQueryFactory;
+    @Autowired
+    protected JdbcTemplate jdbcTemplate;
 
     protected RelationalPathBase<E> qEntity;
     protected ID qId;
@@ -134,25 +139,8 @@ public abstract class QuerydslService<E, I extends Comparable, ID extends Compar
         return select(false, path);
     }
 
-    /**
-     * 返回查询列
-     * ignore=true返回除开path的所有列
-     * ignore=false返回指定的path列
-     *
-     * @param ignore
-     * @param path
-     * @return
-     */
     public QBean<E> select(boolean ignore, Path<?>... path) {
-        List<Path<?>> columnList = qEntity.getColumns().stream().filter(col -> {
-            for (Path<?> p : path) {
-                if (col.equals(p)) {
-                    return !ignore;
-                }
-            }
-            return ignore;
-        }).collect(Collectors.toList());
-        return Projections.fields(qEntity.getType(), columnList.toArray(new Expression<?>[columnList.size()]));
+        return select(ignore, qEntity, path);
     }
 
     public QBean<E> ignore(String... property) {
@@ -163,16 +151,21 @@ public abstract class QuerydslService<E, I extends Comparable, ID extends Compar
         return select(false, property);
     }
 
+    public QBean<E> select(boolean ignore, String... property) {
+        return select(ignore, qEntity, property);
+    }
+
     /**
      * 返回查询列
      * ignore=true返回除开property的所有列
      * ignore=false返回指定的property列
      *
      * @param ignore
+     * @param qEntity
      * @param property
      * @return
      */
-    public QBean<E> select(boolean ignore, String... property) {
+    public static <T> QBean<T> select(boolean ignore, RelationalPathBase<T> qEntity, String... property) {
         List<Path<?>> columnList = qEntity.getColumns().stream().filter(col -> {
             for (String p : property) {
                 if (col.getMetadata().getName().equals(p)) {
@@ -181,7 +174,52 @@ public abstract class QuerydslService<E, I extends Comparable, ID extends Compar
             }
             return ignore;
         }).collect(Collectors.toList());
-        return Projections.fields(qEntity.getType(), columnList.toArray(new Expression<?>[columnList.size()]));
+        return Projections.bean(qEntity.getType(), columnList.toArray(new Expression<?>[columnList.size()]));
+    }
+
+    /**
+     * 返回查询列
+     * ignore=true返回除开path的所有列
+     * ignore=false返回指定的path列
+     *
+     * @param ignore
+     * @param qEntity
+     * @param path
+     * @return
+     */
+    public static <T> QBean<T> select(boolean ignore, RelationalPathBase<T> qEntity, Expression<?>... path) {
+        List<Path<?>> columnList = qEntity.getColumns().stream().filter(col -> {
+            for (Expression<?> p : path) {
+                if (col.equals(p)) {
+                    return !ignore;
+                }
+            }
+            return ignore;
+        }).collect(Collectors.toList());
+        return Projections.bean(qEntity.getType(), columnList.toArray(new Expression<?>[columnList.size()]));
+    }
+
+    /**
+     * 查询多表字段时传递映射关系: Pojo属性---查询列
+     * Map<String, Expression<?>> bindings = new HashMap<>();
+     * bindings.put("id",qAddress.id);
+     * bindings.put("userId",qUser.id);
+     * bindings.put("userName",qUser.name);
+     * bindings.put("zipcode",qAddress.zipcode);
+     *
+     * List<Pojo> result = sqlQueryFactory.select(select(Pojo.class, bindings))
+     *                 .from(qAddress).innerJoin(qUser).on(qAddress.id.eq(qUser.id)).fetch();
+     * @param type
+     * @param bindings
+     * @param <T>
+     * @return
+     */
+    public static <T> QBean<T> select(Class<? extends T> type, Map<String, ? extends Expression<?>> bindings) {
+        return Projections.bean(type, bindings);
+    }
+
+    public static <T> QBean<T> select(Class<? extends T> type, Expression<?>... path) {
+        return Projections.bean(type, path);
     }
 
     public static Predicate[] buildWhere(RelationalPathBase pathBase, Object filter) throws ReflectiveOperationException {
@@ -242,5 +280,13 @@ public abstract class QuerydslService<E, I extends Comparable, ID extends Compar
         }
 
         return predicateList.toArray(new Predicate[predicateList.size()]);
+    }
+
+    public <T> List<T> queryNative(String sql, Class<T> type, Object... args) {
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper(type), args);
+    }
+
+    public int updateNative(String sql, Object... args) {
+        return jdbcTemplate.update(sql, args);
     }
 }

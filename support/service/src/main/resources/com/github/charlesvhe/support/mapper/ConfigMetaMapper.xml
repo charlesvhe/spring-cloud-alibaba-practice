@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.charlesvhe.support.mapper.ConfigMetaMapper">
+    <resultMap id="ConfigMeta" type="com.github.charlesvhe.support.entity.ConfigMeta">
+        <result property="id" column="id"/>
+        <result property="appId" column="app_id"/>
+        <result property="code" column="code"/>
+        <result property="property" column="id"/>
+        <result property="columnName" column="column_name"/>
+        <result property="description" column="description"/>
+        <result property="sort" column="sort"/>
+        <result property="gmtCreate" column="gmt_create"/>
+        <result property="gmtModified" column="gmt_modified"/>
+    </resultMap>
+
+    <sql id="allColumn">
+        id, app_id, code, property, column_name, description, sort, gmt_create, gmt_modified
+    </sql>
+
+    <select id="findAll" resultMap="ConfigMeta">
+        select
+        <include refid="allColumn"/>
+        from config_meta
+    </select>
+
+    <insert id="save" parameterType="com.github.charlesvhe.support.entity.ConfigMeta">
+        insert into config_meta(
+        <trim suffixOverrides=",">
+            <if test="appId!=null">app_id,</if>
+            <if test="code!=null">code,</if>
+            <if test="property!=null">property,</if>
+            <if test="columnName!=null">column_name,</if>
+            <if test="description!=null">description,</if>
+            <if test="gmtCreate!=null">gmt_create,</if>
+            <if test="gmtModified!=null">gmt_modified,</if>
+        </trim>
+        ) values(
+        <trim suffixOverrides=",">
+            <if test="appId!=null">#{appId},</if>
+            <if test="code!=null">#{code},</if>
+            <if test="property!=null">#{property},</if>
+            <if test="columnName!=null">#{columnName},</if>
+            <if test="description!=null">#{description},</if>
+            <if test="gmtCreate!=null">#{gmtCreate},</if>
+            <if test="gmtModified!=null">#{gmtModified},</if>
+        </trim>
+        )
+    </insert>
+
+    <update id="update" parameterType="com.github.charlesvhe.support.entity.ConfigMeta">
+        update config_meta
+        <trim prefix="set" suffixOverrides=",">
+            <if test="appId!=null">app_id=#{appId},</if>
+            <if test="code!=null">code=#{code},</if>
+            <if test="property!=null">property=#{property},</if>
+            <if test="columnName!=null">column_name=#{columnName},</if>
+            <if test="description!=null">description=#{description},</if>
+            <if test="gmtCreate!=null">gmt_create=#{gmtCreate},</if>
+            <if test="gmtModified!=null">gmt_modified=#{gmtModified},</if>
+        </trim>
+        where id=#{id}
+    </update>
+</mapper>

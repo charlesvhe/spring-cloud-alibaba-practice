@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
-@Transactional
 public abstract class QuerydslService<E, I extends Comparable, ID extends ComparableExpressionBase<I> & Path<I>> {
     public enum API {POST, DELETE, PUT, GET, GET_ONE, SEARCH}
 
@@ -100,14 +99,17 @@ public abstract class QuerydslService<E, I extends Comparable, ID extends Compar
         }
     }
 
+    @Transactional
     public I post(@RequestBody E entity) {
         return sqlQueryFactory.insert(qEntity).populate(entity).executeWithKey(qId);
     }
 
+    @Transactional
     public long delete(@PathVariable I id) {
         return sqlQueryFactory.delete(qEntity).where(qId.eq(id)).execute();
     }
 
+    @Transactional
     public long put(@PathVariable I id, @RequestBody E entity) {
         return sqlQueryFactory.update(qEntity).populate(entity).where(qId.eq(id)).execute();
     }

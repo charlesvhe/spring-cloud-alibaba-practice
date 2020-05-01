@@ -15,7 +15,6 @@ import static com.github.charlesvhe.support.entity.QConfigItem.qConfigItem;
 import static com.github.charlesvhe.support.entity.QConfigMeta.qConfigMeta;
 
 @RestController
-@Transactional
 public class ConfigMetaService extends QuerydslService<ConfigMeta, Long, NumberPath<Long>> {
     public ConfigMetaService() {
         super(qConfigMeta, qConfigMeta.id);

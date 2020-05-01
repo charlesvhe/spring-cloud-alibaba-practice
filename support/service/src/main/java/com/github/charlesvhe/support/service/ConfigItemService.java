@@ -79,7 +79,7 @@ public class ConfigItemService extends QuerydslService<ConfigItem, Long, NumberP
     @GetMapping("/{version}/pb/ConfigItem/{appId}/{metaCode}")
     public PageData<ObjectNode, ObjectNode> convertGet(@PathVariable("appId") String appId,
                                                        @PathVariable("metaCode") String metaCode,
-                                                       @RequestBody PageRequest<ObjectNode> pageRequest) throws ReflectiveOperationException {
+                                                       PageRequest<ObjectNode> pageRequest) throws ReflectiveOperationException {
         Map<String, String> propertyColumnMap = configMetaService.buildPropertyColumnMap(appId, metaCode);
         // 校验 appId metaCode id
         ConfigItem configItem = convert(propertyColumnMap, pageRequest.getFilter());

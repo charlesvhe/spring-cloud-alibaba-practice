@@ -1,12 +1,15 @@
 package com.github.charlesvhe.support;
 
+import com.querydsl.sql.Configuration;
 import com.querydsl.sql.MySQLTemplates;
 import com.querydsl.sql.SQLQueryFactory;
-import com.querydsl.sql.spring.SpringConnectionProvider;
+import com.querydsl.sql.SpringSqlListener;
 import org.h2.tools.Server;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.web.client.RestTemplate;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
@@ -17,17 +20,29 @@ import javax.sql.DataSource;
 
 @EnableSwagger2
 @SpringBootApplication
+@MapperScan(basePackages = "com.github.charlesvhe.support.mapper")
 public class SupportApplication {
+    public SupportApplication() {
+        // 开启 H2database TCP服务端
+        try {
+            Server.createTcpServer("-tcpAllowOthers", "-ifNotExists").start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Bean
-    public RestTemplate restTemplate(){
+    public RestTemplate restTemplate() {
         return new RestTemplate();
     }
 
     @Bean
     public SQLQueryFactory queryFactory(DataSource dataSource) {
+        Configuration configuration = new Configuration(MySQLTemplates.builder().build());
+        configuration.addListener(new SpringSqlListener(dataSource));
         return new SQLQueryFactory(
-                new com.querydsl.sql.Configuration(MySQLTemplates.builder().build()),
-                new SpringConnectionProvider(dataSource));
+                configuration,
+                () -> DataSourceUtils.getConnection(dataSource));
     }
 
     @Bean
@@ -38,12 +53,6 @@ public class SupportApplication {
     }
 
     public static void main(String[] args) {
-        // 开启 H2database TCP服务端
-        try {
-            Server.createTcpServer("-tcpAllowOthers", "-ifNotExists").start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         SpringApplication.run(SupportApplication.class, args);
     }
 

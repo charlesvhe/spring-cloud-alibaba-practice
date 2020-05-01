@@ -45,6 +45,8 @@ public class GlobalResponseEntityExceptionHandler {
     @ExceptionHandler(Throwable.class)
     @ResponseBody
     public ResponseEntity<Response> handleControllerException(Exception ex, WebRequest request) {
+        log.error("GlobalResponseEntityExceptionHandler", ex);
+
         ResponseEntity<Response> result;
         if (ex instanceof HttpStatusCodeBusinessException) {
             HttpStatusCodeBusinessException e = (HttpStatusCodeBusinessException) ex;

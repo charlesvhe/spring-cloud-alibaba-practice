@@ -118,8 +118,8 @@
                     </customTypes>
                     <tableNamePattern>CONFIG_META,CONFIG_ITEM</tableNamePattern>
                     <packageName>com.github.charlesvhe.support.entity</packageName>
-                    <serializerClass>com.github.charlesvhe.core.querydsl.MyMetaDataSerializer</serializerClass>
-                    <beanSerializerClass>com.github.charlesvhe.core.querydsl.MyBeanSerializer</beanSerializerClass>
+                    <serializerClass>com.github.charlesvhe.core.querydsl.CoreMetaDataSerializer</serializerClass>
+                    <beanSerializerClass>com.github.charlesvhe.core.querydsl.CoreBeanSerializer</beanSerializerClass>
                     <exportBeans>true</exportBeans>
                     <targetFolder>src/main/java</targetFolder>
                 </configuration>

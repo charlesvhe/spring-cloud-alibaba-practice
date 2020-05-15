@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.Set;
 
-public class MyMetaDataSerializer extends MetaDataSerializer {
+public class CoreMetaDataSerializer extends MetaDataSerializer {
     private NamingStrategy namingStrategy;
 
     /**
@@ -29,12 +29,12 @@ public class MyMetaDataSerializer extends MetaDataSerializer {
      * @param entityPathType
      */
     @Inject
-    public MyMetaDataSerializer(TypeMappings typeMappings,
-                                NamingStrategy namingStrategy,
-                                @Named(SQLCodegenModule.INNER_CLASSES_FOR_KEYS) boolean innerClassesForKeys,
-                                @Named(SQLCodegenModule.IMPORTS) Set<String> imports,
-                                @Named(SQLCodegenModule.COLUMN_COMPARATOR) Comparator<Property> columnComparator,
-                                @Named(SQLCodegenModule.ENTITYPATH_TYPE) Class<?> entityPathType) {
+    public CoreMetaDataSerializer(TypeMappings typeMappings,
+                                  NamingStrategy namingStrategy,
+                                  @Named(SQLCodegenModule.INNER_CLASSES_FOR_KEYS) boolean innerClassesForKeys,
+                                  @Named(SQLCodegenModule.IMPORTS) Set<String> imports,
+                                  @Named(SQLCodegenModule.COLUMN_COMPARATOR) Comparator<Property> columnComparator,
+                                  @Named(SQLCodegenModule.ENTITYPATH_TYPE) Class<?> entityPathType) {
         super(typeMappings, namingStrategy, innerClassesForKeys, imports, columnComparator, entityPathType);
         this.namingStrategy = namingStrategy;
     }

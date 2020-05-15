@@ -3,10 +3,11 @@ package com.github.charlesvhe.support.service;
 import com.github.charlesvhe.core.querydsl.QuerydslService;
 import com.github.charlesvhe.support.entity.ConfigMeta;
 import com.querydsl.core.types.dsl.NumberPath;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,11 +22,22 @@ public class ConfigMetaService extends QuerydslService<ConfigMeta, Long, NumberP
     }
 
     @GetMapping("/test")
-    public List<ConfigMeta> test() {
-        return sqlQueryFactory
-                .select(this.ignore("appId", "code"))
-                .from(qConfigMeta)
-                .fetch();
+    public void test(HttpServletRequest request) {
+
+
+        System.out.println("======HEADER");
+        Enumeration<String> h = request.getHeaderNames();
+        while (h.hasMoreElements()){
+            String header = h.nextElement();
+            System.out.println(header+": "+request.getHeader(header));
+        }
+
+        System.out.println("======PARAMETER");
+        Enumeration<String> p = request.getParameterNames();
+        while (h.hasMoreElements()){
+            String param = p.nextElement();
+            System.out.println(param+": "+request.getParameter(param));
+        }
     }
 
     public Map<String, String> buildPropertyColumnMap(String appId, String code) {

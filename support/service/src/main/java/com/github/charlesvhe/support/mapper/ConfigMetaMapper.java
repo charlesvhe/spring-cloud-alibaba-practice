@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface ConfigMetaMapper {
     List<ConfigMeta> findAll();
+
     long save(ConfigMeta configMeta);
+
     long update(ConfigMeta configMeta);
 }

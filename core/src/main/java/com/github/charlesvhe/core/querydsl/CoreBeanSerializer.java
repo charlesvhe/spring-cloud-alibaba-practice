@@ -13,10 +13,11 @@ import com.querydsl.sql.ColumnMetadata;
 
 import javax.annotation.Generated;
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.*;
 
-public class MyBeanSerializer implements Serializer {
+public class CoreBeanSerializer implements Serializer {
 
     private static final Function<Property, Parameter> propertyToParameter = new Function<Property, Parameter>() {
         @Override
@@ -38,7 +39,7 @@ public class MyBeanSerializer implements Serializer {
     /**
      * Create a new BeanSerializer
      */
-    public MyBeanSerializer() {
+    public CoreBeanSerializer() {
         this(true, " is a Querydsl bean type");
     }
 
@@ -47,7 +48,7 @@ public class MyBeanSerializer implements Serializer {
      *
      * @param javadocSuffix suffix to be used after the simple name in class level javadoc
      */
-    public MyBeanSerializer(String javadocSuffix) {
+    public CoreBeanSerializer(String javadocSuffix) {
         this(true, javadocSuffix);
     }
 
@@ -56,7 +57,7 @@ public class MyBeanSerializer implements Serializer {
      *
      * @param propertyAnnotations true, to serialize property annotations
      */
-    public MyBeanSerializer(boolean propertyAnnotations) {
+    public CoreBeanSerializer(boolean propertyAnnotations) {
         this(propertyAnnotations, " is a Querydsl bean type");
     }
 
@@ -66,9 +67,10 @@ public class MyBeanSerializer implements Serializer {
      * @param propertyAnnotations true, to serialize property annotations
      * @param javadocSuffix       suffix to be used after the simple name in class level javadoc
      */
-    public MyBeanSerializer(boolean propertyAnnotations, String javadocSuffix) {
+    public CoreBeanSerializer(boolean propertyAnnotations, String javadocSuffix) {
         this.propertyAnnotations = propertyAnnotations;
         this.javadocSuffix = javadocSuffix;
+        interfaces.add(new ClassType(Serializable.class));
     }
 
     @Override

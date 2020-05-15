@@ -1,12 +1,13 @@
 package com.github.charlesvhe.support.entity;
 
 import javax.annotation.Generated;
+import java.io.Serializable;
 
 /**
  * ConfigMeta is a Querydsl bean type
  */
 @Generated("com.github.charlesvhe.core.querydsl.MyBeanSerializer")
-public class ConfigMeta {
+public class ConfigMeta implements Serializable {
 
     private Long id;
 

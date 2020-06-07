@@ -2,21 +2,20 @@ package com.github.charlesvhe.support.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
-import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.*;
 
-import javax.annotation.Generated;
+import com.querydsl.core.types.PathMetadata;
+import com.querydsl.core.types.Path;
 
 import com.querydsl.sql.ColumnMetadata;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.List;
+
+
 
 
 /**
  * QConfigMeta is a Querydsl query type for ConfigMeta
  */
-@Generated("com.github.charlesvhe.core.querydsl.MyMetaDataSerializer")
 public class QConfigMeta extends com.querydsl.sql.RelationalPathBase<ConfigMeta> {
 
     private static final long serialVersionUID = -1136516462;

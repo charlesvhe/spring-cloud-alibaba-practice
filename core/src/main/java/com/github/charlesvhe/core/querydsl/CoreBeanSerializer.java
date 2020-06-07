@@ -11,7 +11,6 @@ import com.querydsl.codegen.SerializerConfig;
 import com.querydsl.core.util.BeanUtils;
 import com.querydsl.sql.ColumnMetadata;
 
-import javax.annotation.Generated;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
@@ -88,7 +87,6 @@ public class CoreBeanSerializer implements Serializer {
         for (Type iface : interfaces) {
             importedClasses.add(iface.getFullName());
         }
-        importedClasses.add(Generated.class.getName());
         if (model.hasLists()) {
             importedClasses.add(List.class.getName());
         }
@@ -113,8 +111,6 @@ public class CoreBeanSerializer implements Serializer {
         for (Annotation annotation : model.getAnnotations()) {
             writer.annotation(annotation);
         }
-
-        writer.line("@Generated(\"", getClass().getName(), "\")");
 
         if (!interfaces.isEmpty()) {
             Type superType = null;

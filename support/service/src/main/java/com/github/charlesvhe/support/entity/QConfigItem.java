@@ -5,7 +5,6 @@ import static com.querydsl.core.types.PathMetadataFactory.*;
 import com.querydsl.core.types.dsl.*;
 
 import com.querydsl.core.types.PathMetadata;
-import javax.annotation.Generated;
 import com.querydsl.core.types.Path;
 
 import com.querydsl.sql.ColumnMetadata;
@@ -17,7 +16,6 @@ import java.sql.Types;
 /**
  * QConfigItem is a Querydsl query type for ConfigItem
  */
-@Generated("com.github.charlesvhe.core.querydsl.MyMetaDataSerializer")
 public class QConfigItem extends com.querydsl.sql.RelationalPathBase<ConfigItem> {
 
     private static final long serialVersionUID = -1136621664;

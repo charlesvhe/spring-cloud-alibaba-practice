@@ -122,6 +122,7 @@
                     <beanSerializerClass>com.github.charlesvhe.core.querydsl.CoreBeanSerializer</beanSerializerClass>
                     <exportBeans>true</exportBeans>
                     <targetFolder>src/main/java</targetFolder>
+                    <sourceFolder>src/main/java</sourceFolder>
                 </configuration>
                 <dependencies>
                     <dependency>

@@ -1,12 +1,10 @@
 package com.github.charlesvhe.support.entity;
 
-import javax.annotation.Generated;
 import java.io.Serializable;
 
 /**
  * ConfigItem is a Querydsl bean type
  */
-@Generated("com.github.charlesvhe.core.querydsl.MyBeanSerializer")
 public class ConfigItem implements Serializable {
 
     private Long id;
